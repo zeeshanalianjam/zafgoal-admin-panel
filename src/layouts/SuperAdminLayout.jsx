@@ -8,7 +8,6 @@ import manage from '../assets/manage.png'
 import adminExpense from '../assets/adminExpense.png'
 import products from '../assets/products.png'
 import { Link, Outlet, useLocation } from 'react-router-dom'
-import Search from '../assets/search.png'
 import { IoIosNotificationsOutline } from "react-icons/io";
 import { IoSearchOutline } from "react-icons/io5";
 

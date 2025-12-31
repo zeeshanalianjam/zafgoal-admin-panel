@@ -2,7 +2,7 @@ import React from 'react'
 import { GoTag } from "react-icons/go";
 import { TbCategoryPlus } from "react-icons/tb";
 import { MdOutlineFilterAlt } from "react-icons/md";
-import StockData from './stockData';
+import StockData from './StockData';
 import { useLocation } from 'react-router-dom';
 import OrderData from './OrderData';
 

@@ -13,7 +13,7 @@ const Orders = () => {
                     <StockAvailability />
                 </div>
 
-                {/* stocks details */}
+                {/* orders details */}
                 <div>
                     <StocksDetails />
                 </div>

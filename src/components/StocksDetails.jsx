@@ -23,9 +23,7 @@ const StocksDetails = () => {
             {/* filters */}
             <div className='flex items-center justify-between'>
                 {/* left */}
-                {location.pathname === '/admin/products/orders' ? <div className='bg-white w-[91px] h-[47px] rounded-[14px] shadow-md  flex items-center justify-center gap-[6px] cursor-pointer'>
-                        <GoTag className='rotate-90 shrink-0' /> <p>Orders</p>
-                    </div> : <div className='w-[200px] h-[47px] rounded-[14px] bg-[#F1F3F4] flex items-center justify-center gap-2'>
+               {location.pathname === "/admin/products/orders" ? "" : <div className='w-[200px] h-[47px] rounded-[14px] bg-[#F1F3F4] flex items-center justify-center gap-2'>
                     <div className='bg-white w-[91px] h-[41px] rounded-[14px] shadow-md flex items-center justify-center gap-[6px] cursor-pointer'>
                         <GoTag className='rotate-90 shrink-0' /> <p>Items</p>
                     </div>
@@ -35,15 +33,15 @@ const StocksDetails = () => {
                 </div>}
 
                 {/* right */}
-                <div className='bg-[#F1F3F4] w-[88px] h-[47px] rounded-[14px] flex items-center justify-center gap-[6px]'>
+                { location.pathname === "/admin/products/orders" ? "" :<div className='bg-[#F1F3F4] w-[88px] h-[47px] rounded-[14px] flex items-center justify-center gap-[6px]'>
                     <MdOutlineFilterAlt size={20} className=' shrink-0' /> <p>Filter</p>
-                </div>
+                </div>}
             </div>
 
 
             {/* stocks data */}
             <div>
-               {location.pathname == "/admin/products/orders" ? <OrderData /> : <StockData />}
+                {location.pathname == "/admin/products/orders" ? <OrderData /> : <StockData />}
             </div>
 
 

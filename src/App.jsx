@@ -4,7 +4,7 @@ import SuperAdminLogin from "./pages/super-admin/SuperAdminLogin";
 import AdminLayout from "./layouts/AdminLayout";
 import SuperAdminPrivateRoute from "./privateRoutes/SuperAdminPrivateRoute";
 import SuperAdminDashboard from "./pages/super-admin/SuperAdminDashboard";
-import SuperAdminLayout from "./layouts/superAdminLayout";
+import SuperAdminLayout from "./layouts/SuperAdminLayout";
 import AdminManage from "./pages/admin/AdminManage";
 import Expense from "./pages/Expense";
 import Products from "./pages/Products";
@@ -13,7 +13,7 @@ import Orders from "./pages/Orders";
 
 
 export default function App() {
-  return (
+  return (  
     <Routes >
       {/* admin routes */}
       <Route path="/" element={<AdminLogin />} />

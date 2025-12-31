@@ -12,8 +12,8 @@ const AdminLogin = () => {
 
         {/* logo */}
         <div className='text-center'>
-          <img src={logo} alt="logo" className='w-28  mx-auto' />
-          <h2 className='text-[#213732] text-[39px] font-bold'>Zaf Goal</h2>
+          <img src={logo} alt="logo" className='w-40  mx-auto' />
+          {/* <h2 className='text-[#213732] text-[39px] font-bold'>Zaf Goal</h2> */}
 
         </div>
 

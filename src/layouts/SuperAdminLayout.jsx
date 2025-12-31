@@ -43,7 +43,7 @@ const SuperAdminLayout = () => {
       <div className='bg-[#F1F3F4] w-[375px]  py-10 '>
         {/* logo */}
         <div className='text-center space-y-6'>
-          <img src={logo} alt="logo" className='w-28  mx-auto' />
+          <img src={logo} alt="logo" className='w-40  mx-auto' />
           <h2 className='text-[#213732] text-[39px] font-bold'>Zaf Goal</h2>
 
         </div>

@@ -5,11 +5,11 @@ import manage from '../assets/manage.png'
 import adminExpense from '../assets/adminExpense.png'
 import products from '../assets/products.png'
 import { Link, Outlet, useLocation } from 'react-router-dom'
-import Search from '../assets/search.png'
 import { IoIosNotificationsOutline } from "react-icons/io";
 import { IoSearchOutline } from "react-icons/io5";
 import view_list from '../assets/view_list.png'
 import receipt from '../assets/receipt.png'
+import logoNew from '../assets/logoNew.png'
 
 
 const AdminLayout = () => {
@@ -54,8 +54,8 @@ const AdminLayout = () => {
       <div className='bg-[#F1F3F4] w-[23%]  py-10 shrink-0'>
         {/* logo */}
         <div className='text-center space-y-1'>
-          <img src={logo} alt="logo" className='w-28  mx-auto shrink-0' />
-          <h2 className='text-[#213732] text-[39px] font-bold'>Zaf Goal</h2>
+          <img src={logoNew} alt="logo" className='w-40  mx-auto shrink-0' />
+          {/* <h2 className='text-[#213732] text-[39px] font-bold'>Zaf Goal</h2> */}
 
         </div>
 

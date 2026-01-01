@@ -35,8 +35,8 @@ const FeatureSettingsCard = ({ label }) => {
     
     return (
         <div className='bg-white w-[491px] h-[224px] border rounded-[14px] text-[12px] px-4 py-6 space-y-3'>
-            {mockData.map((data) => (
-                <div className='flex items-center justify-between border rounded-[5px] py-[3px] px-[14px]'>
+            {mockData.map((data, index) => (
+                <div key={index} className='flex items-center justify-between border rounded-[5px] py-[3px] px-[14px]'>
 
                     <p className='font-semibold'>{data.label}</p>
                     <label className='toggle-container'>

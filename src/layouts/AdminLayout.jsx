@@ -63,8 +63,8 @@ const AdminLayout = () => {
         <div className=' py-10 relative'>
           <hr className='relative bottom-2'/>
           {
-            menuItems.map((item) => (
-              <>
+            menuItems.map((item, index) => (
+              <div key={index}>
                 <Link className={`flex items-center gap-4 pb-3 px-6 border-b ${location.pathname === item.path || location.pathname === item.subMenu?.path || location.pathname === item.subMenu2?.path ? 'text-[#213732] font-semibold' : ''}`} to={item.path}>
                   <img className='w-[17px]' src={item.icon} alt="" />
                   <p className='text-[20px]'>{item.name}</p>
@@ -88,7 +88,7 @@ const AdminLayout = () => {
                 {location.pathname === "/admin/products" && <div className='absolute top-[214px] right-0 w-[3px] h-[36px] bg-[#213732]'></div>}
                 {location.pathname === "/admin/products/inventory" && <div className='absolute top-[265px] right-0 w-[2px] h-[26px] bg-[#213732]'></div>}
                 {location.pathname === "/admin/products/orders" && <div className='absolute top-[295px] right-0 w-[2px] h-[26px] bg-[#213732]'></div>}
-              </>
+              </div>
             ))
           }
         </div>

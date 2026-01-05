@@ -1,11 +1,69 @@
-import React from 'react'
+import React, { useState } from 'react'
 import loginBG from '../../assets/loginBG.jpg'
 import logo from '../../assets/logo.png'
 import googleIcon from '../../assets/googleIcon.png'
 import facebookIcon from '../../assets/facebookIcon.png'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { Axios } from '../../common/Axios'
+import { summaryApi } from '../../common/summaryApi'
+import { handleApiError } from '../../utils/handleApiError'
+import { motion, AnimatePresence } from 'framer-motion'
+import EmailPopup from '../../components/poups/EmailPopup'
 
 const AdminLogin = () => {
+  const [data, setData] = useState({
+    email: "",
+    password: ""
+  })
+  const [loading, setLoading] = useState(false)
+  const navigate = useNavigate()
+  const [emailOpen, setEmailOpen] = useState(false)
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    setData((prevData) => ({
+      ...prevData,
+      [name]: value
+    }))
+  }
+
+
+
+  // login Api
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    try {
+      setLoading(true)
+      const response = await Axios({
+        ...summaryApi.login,
+        data
+      })
+
+      if (response.data.success) {
+        const token = response.data.data.token
+        localStorage.setItem('token', token)
+
+        setData({
+          email: "",
+          password: ""
+        })
+        navigate("/admin/dashboard")
+
+      }
+    } catch (error) {
+      handleApiError(error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+
+  // handleForgotPassword
+  const handleForgotPassword = () => {
+    navigate("/admin/forgot-password")
+  }
+
   return (
     <div className=' w-full' style={{ backgroundImage: `url(${loginBG})`, backgroundSize: 'cover' }}>
       <div className='flex flex-col items-center justify-center gap-4 py-10'>
@@ -18,27 +76,42 @@ const AdminLogin = () => {
         </div>
 
         {/* form */}
-        <form action="#" className='border-2 rounded-[40px] text-white bg-[#2137320D] backdrop-blur-md py-10 w-[690px]'>
+        <form onSubmit={handleSubmit} className='border-2 rounded-[40px] text-white bg-[#2137320D] backdrop-blur-md py-10 w-[690px]'>
           <div className='w-[500px] mx-auto space-y-6'>
             <h3 className='text-[28px] font-[400]'>Login as a Admin</h3>
 
             {/* inputs fields */}
             <div className='flex flex-col'>
               <label className='text-[18px]' htmlFor="email">Enter Your Admin Email ID</label>
-              <input className='rounded-[14px] outline-none h-[50px] text-black px-4' type="text" placeholder='admin@gmail.com' />
+              <input className='rounded-[14px] outline-none h-[50px] text-black px-4' type="text" placeholder='admin@gmail.com'
+                name='email' value={data.email} onChange={handleChange} />
             </div>
             <div className='flex flex-col'>
               <label className='text-[18px]' htmlFor="email">Password</label>
-              <input className='rounded-[14px] outline-none h-[50px] text-black px-4' type="password" placeholder='password' />
+              <input className='rounded-[14px] outline-none h-[50px] text-black px-4' type="password" placeholder='password'
+                name='password' value={data.password} onChange={handleChange} />
               <div>
-                <p className='text-[12px] pt-4'>Forgot Password?</p>
+                <p onClick={() => setEmailOpen(true)} className='text-[12px] pt-4 cursor-pointer w-fit'>Forgot Password?</p>
               </div>
             </div>
 
 
+
             {/* submit button */}
             <div className='flex flex-col'>
-              <input className='rounded-[14px] outline-none h-[50px] text-[20px] bg-[#213732] px-4' type="submit" value={"Sign in"} />
+              <button className='rounded-[14px] outline-none h-[50px] text-[20px] bg-[#213732] px-4' type="submit"  >
+                {loading ? (
+                  <motion.div
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                    className="w-5 h-5 border-t-2 border-white border-solid rounded-full mx-auto"
+                  />
+                ) : (
+                  <>
+                    Sign In
+                  </>
+                )}
+              </button>
             </div>
 
             <p className='text-center'>or continue with</p>
@@ -55,11 +128,16 @@ const AdminLogin = () => {
               </div>
             </div>
 
-            <p className='text-center font-semibold'><Link to={"/super-admin/login"}>Login as a Super Admin</Link></p>
+            <p className='text-center font-semibold '><Link to={"/super-admin/login"}>Login as a Super Admin</Link></p>
 
 
           </div>
         </form>
+
+
+
+        {/* Email Modal */}
+        <EmailPopup emailOpen={emailOpen} setEmailOpen={setEmailOpen} />
       </div>
     </div>
   )

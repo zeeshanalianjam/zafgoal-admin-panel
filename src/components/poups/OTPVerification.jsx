@@ -4,10 +4,16 @@ import { IoCloseSharp } from "react-icons/io5";
 import { handleApiError } from "../../utils/handleApiError";
 import { Axios } from "../../common/Axios";
 import { summaryApi } from "../../common/summaryApi";
+import { useSelector } from "react-redux";
+import toast from "react-hot-toast";
+import ResetPassword from "./ResetPassword";
 
 const OTPVerification = ({ otpVerify, setOtpVerify }) => {
     const [otp, setOtp] = useState(["", "", "", "", "", ""]);
     const [loading, setLoading] = useState(false);
+    const admin = useSelector((state) => state.admin);
+    const [openResetPassword, setOpenResetPassword] = useState(false);
+
 
 
     // Handle OTP Change
@@ -35,28 +41,36 @@ const OTPVerification = ({ otpVerify, setOtpVerify }) => {
 
     // Submit OTP
     const handleSubmit = async () => {
-        const finalOtp = otp.join("");
-        console.log("Entered OTP:", finalOtp);
+        const finalOtp = otp.join("")
 
-        if (finalOtp.length !== 6) return alert("Please enter full OTP");
+        console.log(finalOtp)
+
+        if (finalOtp.length !== 6) return toast.error("Please enter full OTP");
 
         try {
             setLoading(true);
             const response = await Axios({
                 ...summaryApi.forgotPasswordOTPVerification,
                 data: {
-                    otp: finalOtp
+                    email: admin?.email,
+                    otp: finalOtp,
                 }
             })
 
-            setOtpVerify(false);
+            if(response.data.success){
+                setOtpVerify(false);
+                setOpenResetPassword(true);
+            }
         } catch (error) {
             handleApiError(error)
+        } finally {
+            setLoading(false);
         }
 
     };
 
     return (
+        <>
         <AnimatePresence>
             {otpVerify && (
                 <motion.div
@@ -116,12 +130,17 @@ const OTPVerification = ({ otpVerify, setOtpVerify }) => {
                             onClick={handleSubmit}
                             className="mt-6 h-[50px] w-full rounded-xl bg-[#213732] font-semibold text-white hover:opacity-90"
                         >
-                            Verify OTP
+                            {loading ? <> <motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: "linear" }} className="h-5 w-5 border-t-2 border-white border-solid rounded-full mx-auto" /></> : "Verify OTP"}
                         </button>
                     </motion.div>
                 </motion.div>
             )}
         </AnimatePresence>
+
+        {/*  reset password popup */}
+        <ResetPassword open={openResetPassword} setOpen={setOpenResetPassword} data={admin?.email}/>
+
+        </>
     );
 };
 

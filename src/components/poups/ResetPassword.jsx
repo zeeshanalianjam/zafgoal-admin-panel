@@ -4,16 +4,12 @@ import { IoCloseSharp } from 'react-icons/io5'
 import { Axios } from '../../common/Axios'
 import { summaryApi } from '../../common/summaryApi'
 import { handleApiError } from '../../utils/handleApiError'
-import OTPVerification from './OTPVerification'
-import { useDispatch } from 'react-redux'
-import { setAdmin } from '../../store/admin/adminSlice'
+import toast from 'react-hot-toast'
 
-const EmailPopup = ({ emailOpen, setEmailOpen }) => {
-    const [email, setEmail] = useState('')
+const ResetPassword = ({ open, setOpen, data }) => {
+    const [password, setPassword] = useState('')
     const [loading, setLoading] = useState(false)
-    const [otpVerify, setOtpVerify] = useState(false)
 
-    const dispatch = useDispatch()
 
 
     const handleSubmit = async (e) => {
@@ -21,17 +17,17 @@ const EmailPopup = ({ emailOpen, setEmailOpen }) => {
         try {
             setLoading(true)
             const response = await Axios({
-                ...summaryApi.forgotPassword,
+                ...summaryApi.resetPassword,
                 data: {
-                    email
+                    email: data,
+                    password
                 }
             })
 
             if (response.data.success) {
-                dispatch(setAdmin(response.data.data.user))
-                setEmailOpen(false)
-                setOtpVerify(true)
-                setEmail('')
+                setOpen(false)
+                setPassword("")
+                toast.success(response.data.message)
             }
 
         } catch (error) {
@@ -46,7 +42,7 @@ const EmailPopup = ({ emailOpen, setEmailOpen }) => {
         <>
 
             <AnimatePresence>
-                {emailOpen && (
+                {open && (
                     <motion.div
                         className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
                         initial={{ opacity: 0 }}
@@ -70,39 +66,36 @@ const EmailPopup = ({ emailOpen, setEmailOpen }) => {
                             </button>
 
                             <h2 className="text-[24px] font-semibold text-[#213732]">
-                                Forgot Password?
+                                Reset Password
                             </h2>
 
                             <p className="mt-1 text-[14px] text-gray-600">
-                                Enter your email address to reset your password
+                                Enter your new password
                             </p>
 
                             {/* Input */}
                             <div className="mt-5 flex flex-col gap-2">
-                                <label className="text-[14px] font-medium">Email</label>
+                                <label className="text-[14px] font-medium">New Password</label>
                                 <input
-                                    type="email"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    name='email'
-                                    placeholder="admin@gmail.com"
+                                    type="password"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    name='password'
                                     className="h-[50px] rounded-xl border border-gray-300 px-4 outline-none focus:border-[#213732]"
                                 />
                             </div>
 
                             {/* Action Button */}
                             <button onClick={handleSubmit} className="mt-6 h-[50px] w-full rounded-xl bg-[#213732] font-semibold text-white hover:opacity-90">
-                                {loading ? <> <motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: "linear" }} className="h-5 w-5 border-t-2 border-white border-solid rounded-full mx-auto" /></> : "Send OTP"}
+                                {loading ? <> <motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: "linear" }} className="h-5 w-5 border-t-2 border-white border-solid rounded-full mx-auto" /></> : "Reset Now"}
                             </button>
                         </motion.div>
                     </motion.div>
                 )}
             </AnimatePresence>
 
-            {/* forgot password OTP verification */}
-            <OTPVerification otpVerify={otpVerify} setOtpVerify={setOtpVerify} />
         </>
     )
 }
 
-export default EmailPopup
+export default ResetPassword

@@ -1,6 +1,36 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { handleApiError } from '../utils/handleApiError'
+import { Axios } from '../common/Axios'
+import { summaryApi } from '../common/summaryApi'
+import { motion } from 'framer-motion'
 
 const OrderData = () => {
+    const [loading, setLoading] = useState(false)
+    const [data, setData] = useState([])
+
+    useEffect(() => {
+        const fetchOrders = async () => {
+            try {
+                setLoading(true)
+                const response = await Axios({
+                    ...summaryApi.getAllOrders
+                })
+
+                if (response.data.success) {
+                    setData(response.data.data)
+                }
+
+            } catch (error) {
+                handleApiError(error)
+            } finally {
+                setLoading(false)
+            }
+        }
+
+        fetchOrders()
+    }, [])
+
+
     const stocks = [
         {
             ID: "#ORD-9901",
@@ -151,14 +181,19 @@ const OrderData = () => {
                         </th> */}
                     </tr>
                 </thead>
+                {loading && <tr><td colSpan={4} className="py-2 px-4 text-center"><> <motion.div
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                    className="w-5 h-5 border-t-2 border-black border-solid rounded-full mx-auto"
+                /> </> </td></tr>}
                 <tbody>
-                    {stocks.map((stock, index) => (
+                    {data.map((item, index) => (
                         <tr key={index} className=" hover:bg-gray-50 text-[12px]">
-                            <td className="py-1 px-4">{stock.ID}</td>
-                            <td className="py-1 px-4">{stock.Title}</td>
-                            <td className="py-1 px-4">{stock["Date and time"]}</td>
+                            <td className="py-1 px-4">{item.orderId}</td>
+                            <td className="py-1 px-4">{item.products.map((product) => product.productId.name)}</td>
+                            <td className="py-1 px-4">{item.createdAt.slice(0, 10)}</td>
                             <td className="py-1 px-4">
-                                {stock["Shipping Condition"]}
+                                {item.deliveryStatus}
                             </td>
                         </tr>
                     ))}

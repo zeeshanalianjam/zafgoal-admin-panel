@@ -1,10 +1,11 @@
 const baseURL = "http://localhost:3000"
 
 const userUrl = '/api/v1/user'
+const orderUrl = '/api/v1/order'
 
 const summaryApi = {
 
-    // users Api's
+    // Auth Api's
     register: {
         url: `${userUrl}/register`,
         method: `post`
@@ -29,6 +30,37 @@ const summaryApi = {
         url: `${userUrl}/reset-password`,
         method: `put`
     },
+
+
+    // Users Api's
+    getUserDetails: {
+        url: `${userUrl}/get-user-details`,
+        method: `get`
+    },
+    getAllUsers: {
+        url: `${userUrl}/get-all-users`,
+        method: `get`
+    },
+
+
+    // Orders Api's
+    getAllOrders: {
+        url: `${orderUrl}/get-all-orders`,
+        method: `get`
+    },
+    orderSales: {
+        url: `${orderUrl}/total-sales`,
+        method: `get`
+    },
+    weeklyStats: {
+        url: `${orderUrl}/weekly-sales-stats`,
+        method: `get`
+    },
+    monthlyStats: {
+        url: `${orderUrl}/monthly-sales-stats`,
+        method: `get`
+    },
+
 
 }
 

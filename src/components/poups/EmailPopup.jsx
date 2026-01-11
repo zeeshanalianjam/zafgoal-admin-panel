@@ -7,11 +7,13 @@ import { handleApiError } from '../../utils/handleApiError'
 import OTPVerification from './OTPVerification'
 import { useDispatch } from 'react-redux'
 import { setAdmin } from '../../store/admin/adminSlice'
+import { useLocation } from 'react-router-dom'
 
 const EmailPopup = ({ emailOpen, setEmailOpen }) => {
     const [email, setEmail] = useState('')
     const [loading, setLoading] = useState(false)
     const [otpVerify, setOtpVerify] = useState(false)
+    const location = useLocation()
 
     const dispatch = useDispatch()
 
@@ -85,7 +87,7 @@ const EmailPopup = ({ emailOpen, setEmailOpen }) => {
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                     name='email'
-                                    placeholder="admin@gmail.com"
+                                    placeholder={`${location.pathname === '/' ? 'admin@gmail.com' : 'super-admin@gmail.com'} `}
                                     className="h-[50px] rounded-xl border border-gray-300 px-4 outline-none focus:border-[#213732]"
                                 />
                             </div>

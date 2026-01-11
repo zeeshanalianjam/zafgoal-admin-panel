@@ -60,6 +60,7 @@ const OTPVerification = ({ otpVerify, setOtpVerify }) => {
             if(response.data.success){
                 setOtpVerify(false);
                 setOpenResetPassword(true);
+                setOtp(["", "", "", "", "", ""]);
             }
         } catch (error) {
             handleApiError(error)

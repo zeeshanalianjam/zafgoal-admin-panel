@@ -44,7 +44,7 @@ const SuperAdminLayout = () => {
         {/* logo */}
         <div className='text-center space-y-6'>
           <img src={logo} alt="logo" className='w-40  mx-auto' />
-          <h2 className='text-[#213732] text-[39px] font-bold'>Zaf Goal</h2>
+          {/* <h2 className='text-[#213732] text-[39px] font-bold'>Zaf Goal</h2> */}
 
         </div>
 

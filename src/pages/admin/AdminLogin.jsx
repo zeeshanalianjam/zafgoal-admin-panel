@@ -9,6 +9,8 @@ import { summaryApi } from '../../common/summaryApi'
 import { handleApiError } from '../../utils/handleApiError'
 import { motion, AnimatePresence } from 'framer-motion'
 import EmailPopup from '../../components/poups/EmailPopup'
+import { useDispatch } from 'react-redux'
+import { setAdmin } from '../../store/admin/adminSlice'
 
 const AdminLogin = () => {
   const [data, setData] = useState({
@@ -18,6 +20,7 @@ const AdminLogin = () => {
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
   const [emailOpen, setEmailOpen] = useState(false)
+  const dispatch = useDispatch()
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -42,7 +45,8 @@ const AdminLogin = () => {
 
       if (response.data.success) {
         const token = response.data.data.token
-        localStorage.setItem('token', token)
+        localStorage.setItem('adminToken', token)
+        dispatch(setAdmin(response.data.data.user))
 
         setData({
           email: "",
@@ -59,10 +63,6 @@ const AdminLogin = () => {
   }
 
 
-  // handleForgotPassword
-  const handleForgotPassword = () => {
-    navigate("/admin/forgot-password")
-  }
 
   return (
     <div className=' w-full' style={{ backgroundImage: `url(${loginBG})`, backgroundSize: 'cover' }}>

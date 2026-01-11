@@ -1,7 +1,64 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Chart from 'react-apexcharts';
+import { handleApiError } from '../utils/handleApiError';
+import { Axios } from '../common/Axios';
+import { summaryApi } from '../common/summaryApi';
 
 const DashboardAreaChart = () => {
+  const [type, setType] = useState('weekly');
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState([]);
+
+  const DataTotalValues = data.map(item => item.total);
+  const DataTotalKeys = data.map(item => item.day);
+
+  useEffect(() => {
+    const fetchWeeklyData = async () => {
+      try {
+        setLoading(true);
+        const response = await Axios({
+          ...summaryApi.weeklyStats,
+        });
+
+        if (response.data.success) {
+          setData(response.data.data);
+        }
+
+      } catch (error) {
+        handleApiError(error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    const fetchMonthlyData = async () => {
+      try {
+        setLoading(true);
+        const response = await Axios({
+          ...summaryApi.monthlyStats,
+        });
+
+        if (response.data.success) {
+          setData(response.data.data);
+        }
+
+      } catch (error) {
+        handleApiError(error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+
+    if (type === 'weekly') {
+      fetchWeeklyData();
+    } else {
+      fetchMonthlyData();
+    }
+
+
+  }, [type]);
+
   const options = {
     chart: {
       type: 'area',
@@ -28,16 +85,14 @@ const DashboardAreaChart = () => {
       borderColor: '#fff',
     },
     xaxis: {
-      categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+      categories: DataTotalKeys,
       axisBorder: { show: true },
       axisTicks: { show: true },
     },
     yaxis: {
       show: true,
       tickAmount: 3,
-      min: 0,
-      max: 300,
-      
+
     },
     tooltip: {
       enabled: true,
@@ -59,7 +114,7 @@ const DashboardAreaChart = () => {
 
   const series = [{
     name: 'Sales',
-    data: [80, 70, 50, 90, 180, 250, 220]
+    data: DataTotalValues
   }];
 
   return (
@@ -68,7 +123,7 @@ const DashboardAreaChart = () => {
       {/* chart title */}
       <div className='flex items-center justify-between'>
         <h3 className='text-[20px] font-bold text-slate-800'>Sales Statistics</h3>
-        <select className='bg-transparent  text-sm font-semibold outline-none cursor-pointer'>
+        <select value={type} onChange={(e) => setType(e.target.value)} className='bg-transparent  text-sm font-semibold outline-none cursor-pointer'>
           <option value="weekly">Weekly</option>
           <option value="monthly">Monthly</option>
         </select>

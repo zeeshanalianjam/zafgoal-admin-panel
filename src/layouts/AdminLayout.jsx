@@ -9,10 +9,13 @@ import { IoIosNotificationsOutline } from "react-icons/io";
 import { IoSearchOutline } from "react-icons/io5";
 import view_list from '../assets/view_list.png'
 import receipt from '../assets/receipt.png'
+import { useSelector } from 'react-redux'
 
 
 const AdminLayout = () => {
   const location = useLocation()
+  const admin = useSelector(state => state.admin)
+  console.log(admin)
 
   // menu items
   const menuItems = [
@@ -61,7 +64,7 @@ const AdminLayout = () => {
 
         {/* menus */}
         <div className=' py-10 relative'>
-          <hr className='relative bottom-2'/>
+          <hr className='relative bottom-2' />
           {
             menuItems.map((item, index) => (
               <div key={index}>
@@ -102,7 +105,7 @@ const AdminLayout = () => {
       <div className='bg-[#F1F3F4] w-[75%] rounded-[45px]  mx-auto my-3 px-10 py-10 shrink-0'>
         {/* header */}
         <div className='flex justify-between items-center '>
-          <h2 className='font-semibold text-[32px]'>Welcome, Mickie!</h2>
+          <h2 className='font-semibold text-[32px]'>{`Welcome, ${admin._id !== '' ? admin?.name : "Mickie"}!`}</h2>
 
           <div className='flex items-center  gap-8'>
             <div className='relative flex  items-center'>

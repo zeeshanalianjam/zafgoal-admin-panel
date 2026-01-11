@@ -37,10 +37,10 @@ const StocksDetails = () => {
     ]
 
     const allItems = mockData.flatMap((category) => category.products.map((product) => ({ ...product, section: category.categoryName })));
-    console.log(allItems)
+    // console.log(allItems)
 
     const filteredItems = filterStatus === 'All' ? allItems : allItems.filter((item) => item.status === filterStatus);
-    console.log("filter items", filteredItems)
+    // console.log("filter items", filteredItems)
 
 
     return (

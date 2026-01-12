@@ -1,69 +1,7 @@
 import React from 'react'
 
 const StockData = ({ view, filteredItems, data }) => {
-  const stocks = [
-    {
-      title: "Organic Whole Milk",
-      section: "Dairy & Eggs",
-      availability: "In Stock",
-    },
-    {
-      title: "Laundry Detergent Pods",
-      section: "Household",
-      availability: "Low Stock (5 left)",
-    },
-    { title: "Basmati Rice (5kg)", section: "Pantry", availability: "In Stock" },
-    {
-      title: "Organic Whole Milk",
-      section: "Dairy & Eggs",
-      availability: "In Stock",
-    },
-    {
-      title: "Organic Whole Milk",
-      section: "Dairy & Eggs",
-      availability: "In Stock",
-    },
-    {
-      title: "Organic Whole Milk",
-      section: "Dairy & Eggs",
-      availability: "In Stock",
-    },
-    {
-      title: "Organic Whole Milk",
-      section: "Dairy & Eggs",
-      availability: "In Stock",
-    },
-    {
-      title: "Greek Yogurt (Plain)",
-      section: "Dairy & Eggs",
-      availability: "Out of Stock",
-    },
-    {
-      title: "Greek Yogurt (Plain)",
-      section: "Dairy & Eggs",
-      availability: "Out of Stock",
-    },
-    {
-      title: "Greek Yogurt (Plain)",
-      section: "Dairy & Eggs",
-      availability: "Out of Stock",
-    },
-    {
-      title: "Greek Yogurt (Plain)",
-      section: "Dairy & Eggs",
-      availability: "Out of Stock",
-    },
-    {
-      title: "Greek Yogurt (Plain)",
-      section: "Dairy & Eggs",
-      availability: "Out of Stock",
-    },
-    {
-      title: "Greek Yogurt (Plain)",
-      section: "Dairy & Eggs",
-      availability: "Out of Stock",
-    },
-  ];
+ 
 
   const getStatusColor = (status) => {
     if (status === "In Stock") return 'text-green-600'
@@ -92,7 +30,7 @@ const StockData = ({ view, filteredItems, data }) => {
         </thead>
         <tbody>
           {view === "items" ?
-            (filteredItems.map((item, index) => (
+            (filteredItems.map((item) => (
               <tr key={item.id} className=" hover:bg-gray-50 text-[12px]">
                 <td className="py-1 px-4">{item.name}</td>
                 <td className="py-1 px-4">{item.section}</td>

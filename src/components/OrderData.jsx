@@ -16,6 +16,8 @@ const OrderData = () => {
                     ...summaryApi.getAllOrders
                 })
 
+                console.log(response.data.data)
+
                 if (response.data.success) {
                     setData(response.data.data)
                 }
@@ -190,7 +192,7 @@ const OrderData = () => {
                     {data.map((item, index) => (
                         <tr key={index} className=" hover:bg-gray-50 text-[12px]">
                             <td className="py-1 px-4">{item.orderId}</td>
-                            <td className="py-1 px-4">{item.products.map((product) => product.productId.name)}</td>
+                            <td className="py-1 px-4">{item.products.map((product) => product.productId?.name)}</td>
                             <td className="py-1 px-4">{item.createdAt.slice(0, 10)}</td>
                             <td className="py-1 px-4">
                                 {item.deliveryStatus}

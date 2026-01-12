@@ -2,6 +2,7 @@ const baseURL = "http://localhost:3000"
 
 const userUrl = '/api/v1/user'
 const orderUrl = '/api/v1/order'
+const productUrl = '/api/v1/product'
 
 const summaryApi = {
 
@@ -60,6 +61,13 @@ const summaryApi = {
         url: `${orderUrl}/monthly-sales-stats`,
         method: `get`
     },
+
+
+    // Products Api's
+    getAllProducts: {
+        url: `${productUrl}/get-all-products`,
+        method: `get`
+    }
 
 
 }

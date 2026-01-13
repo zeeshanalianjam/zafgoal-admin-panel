@@ -3,7 +3,9 @@ import { createSlice } from "@reduxjs/toolkit"
 const initialState = {
     _id: "",
     name: "",
-    email: ""
+    email: "",
+    role: "",
+    permissions: []
 }
 
 const adminSlice = createSlice({
@@ -15,6 +17,8 @@ const adminSlice = createSlice({
             state._id = action.payload._id
             state.name = action.payload.name
             state.email = action.payload.email
+            state.role = action.payload.role
+            state.permissions = action.payload.permissions
         }
     }
 })

@@ -5,6 +5,7 @@ import { MdDelete } from "react-icons/md";
 import { handleApiError } from "../../utils/handleApiError";
 import { Axios } from "../../common/Axios";
 import { summaryApi } from "../../common/summaryApi";
+import toast from "react-hot-toast";
 
 const PERMISSIONS_LIST = [
   { label: "Dashboard", value: "dashboard" },
@@ -14,82 +15,8 @@ const PERMISSIONS_LIST = [
   { label: "Orders", value: "orders" },
 ];
 
-const AddAdmin = ({ setAddAdmin }) => {
-  const [data, setData] = useState({
-    name: "",
-    email: "",
-    password: "",
-    role: "Admin",
-    permissions: [],
-  });
+const AddAdmin = ({ setAddAdmin, handleSubmit, handleChange, addAdminData, handlePermissionAdd, handlePermissionRemove, loading }) => {
 
-  const [loading, setLoading] = useState(false);
-
-  // handle input change
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  // handle permission select (ADD to array)
-  const handlePermissionAdd = (e) => {
-    const value = e.target.value;
-
-    if (!value) return;
-
-    setData((prev) => {
-      // prevent duplicates
-      if (prev.permissions.includes(value)) return prev;
-
-      return {
-        ...prev,
-        permissions: [...prev.permissions, value],
-      };
-    });
-  };
-
-  // remove permission
-  const handlePermissionRemove = (perm) => {
-    setData((prev) => ({
-      ...prev,
-      permissions: prev.permissions.filter((p) => p !== perm),
-    }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (data.permissions.length === 0) {
-      alert("Please select at least one permission");
-      return;
-    }
-
-    try {
-      setLoading(true);
-      const response = await Axios({
-        ...summaryApi.register,
-        data,
-      });
-
-      if (response.data.success) {
-        setData({
-          name: "",
-          email: "",
-          password: "",
-          role: "Admin",
-          permissions: [],
-        });
-        setAddAdmin(false);
-      }
-    } catch (error) {
-      handleApiError(error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   return (
     <AnimatePresence>
@@ -126,7 +53,7 @@ const AddAdmin = ({ setAddAdmin }) => {
           <div className="flex flex-col gap-1">
             <label className="text-sm font-medium">Name</label>
             <input
-              value={data.name}
+              value={addAdminData.name}
               onChange={handleChange}
               type="text"
               name="name"
@@ -140,7 +67,7 @@ const AddAdmin = ({ setAddAdmin }) => {
           <div className="flex flex-col gap-1">
             <label className="text-sm font-medium">Email</label>
             <input
-              value={data.email}
+              value={addAdminData.email}
               onChange={handleChange}
               type="email"
               name="email"
@@ -154,7 +81,7 @@ const AddAdmin = ({ setAddAdmin }) => {
           <div className="flex flex-col gap-1">
             <label className="text-sm font-medium">Password</label>
             <input
-              value={data.password}
+              value={addAdminData.password}
               onChange={handleChange}
               type="password"
               name="password"
@@ -184,9 +111,9 @@ const AddAdmin = ({ setAddAdmin }) => {
             </select>
 
             {/* Selected Permissions */}
-            {data.permissions.length > 0 && (
+            {addAdminData.permissions.length > 0 && (
               <div className="flex flex-wrap gap-2 mt-2">
-                {data.permissions.map((perm) => (
+                {addAdminData.permissions.map((perm) => (
                   <div
                     key={perm}
                     className="flex items-center gap-2 bg-[#213732] text-white px-3 py-1 rounded-full text-sm"

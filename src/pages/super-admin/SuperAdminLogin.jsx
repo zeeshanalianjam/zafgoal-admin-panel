@@ -8,7 +8,8 @@ import { summaryApi } from '../../common/summaryApi'
 import { Axios } from '../../common/Axios'
 import { handleApiError } from '../../utils/handleApiError'
 import EmailPopup from '../../components/poups/EmailPopup'
-import {motion, AnimatePresence} from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
+import toast from 'react-hot-toast'
 
 const SuperAdminLogin = () => {
     const [data, setData] = useState({
@@ -40,6 +41,9 @@ const SuperAdminLogin = () => {
             })
 
             if (response.data.success) {
+                if (response?.data?.data?.user?.role !== 'superAdmin') {
+                    return toast.error('You are not an SuperAdmin!');
+                }
                 const token = response.data.data.token
                 localStorage.setItem('superAdminToken', token)
 

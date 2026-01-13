@@ -1,65 +1,79 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
-const AdminsTable = () => {
+import { Pencil, Trash2 } from 'lucide-react'
+
+const AdminsTable = ({ data, handleEdit, handleDelete }) => {
+
+
   return (
- <div className='rounded-[14px] px-6 py-2 border border-[#F1F3F4]'>
-       {/* Table */}
-       <table className="w-full text-left border-collapse ">
-         <thead>
-           <tr className="border-b border-[#F1F3F4] text-[14px]">
-             <th className="py-2 px-4 font-medium text-gray-700">Title</th>
-             <th className="py-2 px-4 font-medium text-gray-700">Sections</th>
-             <th className="py-2 px-4 font-medium text-gray-700">
-               <div className="flex justify-center">
-                 <span className="text-left w-full max-w-[100px]">
-                   Availability
-                 </span>
-               </div>
-             </th>
-           </tr>
-         </thead>
-         <tbody>
-           {view === "items" ?
-             (filteredItems.map((item) => (
-               <tr key={item.id} className=" hover:bg-gray-50 text-[12px]">
-                 <td className="py-1 px-4">{item.name}</td>
-                 <td className="py-1 px-4">{item.section}</td>
-                 <td className="py-1 px-4">
-                   <div className="flex justify-center">
-                     <span
-                       className={`text-left w-full max-w-[100px] font-semibold ${getStatusColor(
-                         item.status
-                       )}`}
-                     >
-                       {item.status} {item.stock > 0 && item.status === 'Low Stock' ? `(${item.stock} left)` : ''}
-                     </span>
-                   </div>
-                 </td>
-               </tr>
-             ))) : (data.map((cat) => (
- 
-               <React.Fragment key={cat.categoryId}>
-                 <tr className="bg-blue-50">
-                   <td colSpan="3" className="py-2 px-4 font-bold text-blue-800 text-[14px]">{cat.categoryName}</td>
-                 </tr>
-                 {cat.products.map(item => (
-                   <tr key={item.id} className="border-b text-[12px]">
-                     <td className="py-3 pl-8 ">{item.name}</td>
-                     <td className="py-3 px-4 text-gray-400">--</td>
-                     <td className={`py-3 font-medium ${getStatusColor(item.status)}`}>
-                       <div className='flex justify-center'>
-                         <span className='text-left w-full max-w-[100px]'>{item.status}</span>
-                       </div>
-                     </td>
-                   </tr>
-                 ))}
-               </React.Fragment>
- 
-             )))}
-         </tbody>
-       </table>
- 
-     </div>
+    <div className="rounded-2xl px-6 py-4 border border-[#F1F3F4] bg-white shadow-sm">
+      <table className="w-full text-left border-collapse">
+        <thead>
+          <tr className="border-b border-[#F1F3F4] text-[13px] text-gray-600">
+            <th className="py-3 px-4 font-semibold">Name</th>
+            <th className="py-3 px-4 font-semibold">Email</th>
+            <th className="py-3 px-4 font-semibold">Permissions</th>
+            <th className="py-3 px-4 font-semibold text-center">Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {data.map((item) => (
+            <tr
+              key={item._id}
+              className="border-b last:border-b-0 hover:bg-gray-50 transition text-[13px]"
+            >
+              {/* Name */}
+              <td className="py-3 px-4 font-medium text-gray-800">
+                {item.name}
+              </td>
+
+              {/* Email */}
+              <td className="py-3 px-4 text-gray-600">
+                {item.email}
+              </td>
+
+              {/* Permissions */}
+              <td className="py-3 px-4">
+                <div className="flex flex-wrap gap-2">
+                  {item.permissions.map((permission, index) => (
+                    <span
+                      key={index}
+                      className="px-3 py-1 rounded-full text-[11px] font-semibold bg-blue-50 text-blue-600 border border-blue-100"
+                    >
+                      {permission}
+                    </span>
+                  ))}
+                </div>
+              </td>
+
+              {/* Actions */}
+              <td className="py-3 px-4">
+                <div className="flex items-center justify-center gap-3">
+                  {/* Edit */}
+                  <button
+                    onClick={() => handleEdit(item)}
+                    className="p-2 rounded-lg hover:bg-blue-50 text-blue-600 transition"
+                    title="Edit"
+                  >
+                    <Pencil size={16} />
+                  </button>
+
+                  {/* Delete */}
+                  <button
+                    onClick={() => handleDelete(item._id)}
+                    className="p-2 rounded-lg hover:bg-red-50 text-red-500 transition"
+                    title="Delete"
+                  >
+                    <Trash2 size={16} />
+                  </button>
+                </div>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   )
 }
 

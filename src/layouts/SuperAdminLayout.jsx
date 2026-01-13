@@ -7,40 +7,55 @@ import dashboardIcon from '../assets/dashboardIcon.png'
 import manage from '../assets/manage.png'
 import adminExpense from '../assets/adminExpense.png'
 import products from '../assets/products.png'
-import { Link, Outlet, useLocation } from 'react-router-dom'
+import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
 import { IoIosNotificationsOutline } from "react-icons/io";
 import { IoSearchOutline } from "react-icons/io5";
+import view_list from '../assets/view_list.png'
+import receipt from '../assets/receipt.png'
+import { useSelector } from 'react-redux'
+
 
 const SuperAdminLayout = () => {
   const location = useLocation()
+  const admin = useSelector(state => state.admin)
 
   // menu items
   const menuItems = [
-    {
-      name: 'Dashboard',
-      icon: dashboardIcon,
-      path: '/super-admin/dashboard'
-    },
-    {
-      name: "Admin Management",
-      icon: manage,
-      path: '/super-admin/admin-management'
-    },
-    {
-      name: "Expense",
-      icon: adminExpense,
-      path: '/super-admin/expense'
-    },
-    {
-      name: "Products",
-      icon: products,
-      path: '/super-admin/products'
-    }
-  ]
+      {
+        name: 'Dashboard',
+        icon: dashboardIcon,
+        path: '/super-admin/dashboard',
+      },
+      {
+        name: "Admin Management",
+        icon: manage,
+        path: '/super-admin/admin-management',
+      },
+      {
+        name: "Expense",
+        icon: adminExpense,
+        path: '/super-admin/expense',
+      },
+      {
+        name: "Products",
+        icon: products,
+        path: '/super-admin/products',
+      },
+      {
+        name: "Inventory",
+        path: '/super-admin/inventory',
+        icon: view_list,
+      },
+      {
+        name: "Orders",
+        path: '/super-admin/orders',
+        icon: receipt,
+      }
+    ]
   return (
     <div className='flex '>
       {/* sidebar */}
-      <div className='bg-[#F1F3F4] w-[375px]  py-10 '>
+      <div className='bg-[#F1F3F4] w-[23%]  py-10 shrink-0 '>
         {/* logo */}
         <div className='text-center space-y-6'>
           <img src={logo} alt="logo" className='w-40  mx-auto' />
@@ -50,20 +65,32 @@ const SuperAdminLayout = () => {
 
 
         {/* menus */}
-        <div className='px-6 py-6 space-y-6 relative'>
-          {
-            menuItems.map((item) => (
-              <>
-                <Link className={`flex items-center gap-4 ${location.pathname === item.path ? 'text-[#213732] font-semibold' : ''}`} to={item.path}>
-                  <img className='w-[17px]' src={item.icon} alt="" />
-                  <p className='text-[20px]'>{item.name}</p>
-                </Link>
-                {/* line for active link */}
-                {location.pathname === item.path && <div className='absolute top-0 right-0 w-[4px] h-[36px] bg-[#213732]'></div>}
-              </>
-            ))
-          }
-        </div>
+      <div className="py-10 relative">
+  <hr className="relative bottom-2" />
+
+  {menuItems.map((item, index) => (
+    <NavLink
+      key={index}
+      to={item.path}
+      className={({ isActive }) =>
+        `group flex items-center gap-4 py-3 px-6 border-b relative transition
+         ${isActive ? "text-[#213732] font-semibold" : "text-gray-600 hover:text-[#213732]"}`
+      }
+    >
+      {/* Active Line */}
+      <span
+        className={({ isActive }) =>
+          `absolute right-0 top-1/2 -translate-y-1/2 w-[3px] h-[36px] bg-[#213732] transition 
+           ${isActive ? "opacity-100" : "opacity-0"}`
+        }
+      />
+
+      <img className="w-[17px]" src={item.icon} alt="" />
+      <p className="text-[18px]">{item.name}</p>
+    </NavLink>
+  ))}
+</div>
+
 
 
 
@@ -71,10 +98,10 @@ const SuperAdminLayout = () => {
 
 
       {/* main content */}
-      <div className='bg-[#F1F3F4] w-[1025px] rounded-[45px]  m-2 px-10 py-10'>
+      <div className='bg-[#F1F3F4]  w-[75%] rounded-[45px]  mx-auto my-3 px-10 py-10 shrink-0'>
         {/* header */}
         <div className='flex justify-between items-center '>
-          <h2 className='font-semibold text-[32px]'>Welcome, Mickie!</h2>
+          <h2 className='font-semibold text-[32px]'>{`Welcome, ${admin._id !== '' ? admin?.name : "Mickie"}!`}</h2>
 
           <div className='flex items-center  gap-8'>
             <div className='relative flex  items-center'>

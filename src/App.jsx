@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import AdminLogin from "./pages/admin/AdminLogin";
 import SuperAdminLogin from "./pages/super-admin/SuperAdminLogin";
 import AdminLayout from "./layouts/AdminLayout";
@@ -16,6 +16,7 @@ import NotFound from "./pages/NotFound";
 
 
 export default function App() {
+
   return (
     <>
       <Routes >
@@ -31,14 +32,18 @@ export default function App() {
           <Route path="admin-management" element={<AdminManage />} />
           <Route path="expense" element={<Expense />} />
           <Route path="products" element={<Products />} />
-          <Route path="products/inventory" element={<Inventory />} />
-          <Route path="products/orders" element={<Orders />} />
-
+          <Route path="inventory" element={<Inventory />} />
+          <Route path="orders" element={<Orders />} />
         </Route>
 
         {/* super admin dashboard layout */}
         <Route path="/super-admin" element={<SuperAdminPrivateRoute> <SuperAdminLayout /> </SuperAdminPrivateRoute>} >
           <Route path="dashboard" element={<SuperAdminDashboard />} />
+          <Route path="admin-management" element={<AdminManage />} />
+          <Route path="expense" element={<Expense />} />
+          <Route path="products" element={<Products />} />
+          <Route path="inventory" element={<Inventory />} />
+          <Route path="orders" element={<Orders />} />
         </Route>
 
         {/* not found route */}

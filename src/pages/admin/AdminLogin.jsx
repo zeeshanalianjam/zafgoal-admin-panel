@@ -11,6 +11,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import EmailPopup from '../../components/poups/EmailPopup'
 import { useDispatch } from 'react-redux'
 import { setAdmin } from '../../store/admin/adminSlice'
+import toast from 'react-hot-toast'
 
 const AdminLogin = () => {
   const [data, setData] = useState({
@@ -44,15 +45,19 @@ const AdminLogin = () => {
       })
 
       if (response.data.success) {
+        if (response?.data?.data?.user?.role !== 'Admin') {
+          return toast.error('You are not an Admin!');
+        }
         const token = response.data.data.token
         localStorage.setItem('adminToken', token)
         dispatch(setAdmin(response.data.data.user))
+        const permission = response.data.data.user.permissions
 
         setData({
           email: "",
           password: ""
         })
-        navigate("/admin/dashboard")
+        navigate(`/admin/${permission[0]}`)
 
       }
     } catch (error) {

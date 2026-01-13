@@ -49,10 +49,10 @@ const StocksDetails = () => {
             <div>
                 {location.pathname === '/admin/admin-management' && <h3 className='font-semibold text-[24px]'>Stocks</h3>}
                 {location.pathname === '/super-admin/admin-management' && <h3 className='font-semibold text-[24px]'>Stocks</h3>}
-                {location.pathname === '/super-admin/products/inventory' && <h3 className='font-semibold text-[24px]'>Inventory</h3>}
-                {location.pathname === '/admin/products/inventory' && <h3 className='font-semibold text-[24px]'>Inventory</h3>}
-                {location.pathname === '/admin/products/orders' && <h3 className='font-semibold text-[24px]'>Orders</h3>}
-                {location.pathname === '/super-admin/products/orders' && <h3 className='font-semibold text-[24px]'>Orders</h3>}
+                {location.pathname === '/super-admin/inventory' && <h3 className='font-semibold text-[24px]'>Inventory</h3>}
+                {location.pathname === '/admin/inventory' && <h3 className='font-semibold text-[24px]'>Inventory</h3>}
+                {location.pathname === '/admin/orders' && <h3 className='font-semibold text-[24px]'>Orders</h3>}
+                {location.pathname === '/super-admin/orders' && <h3 className='font-semibold text-[24px]'>Orders</h3>}
             </div>
 
             {/* filters */}

@@ -4,7 +4,7 @@ import dashboardIcon from '../assets/dashboardIcon.png'
 import manage from '../assets/manage.png'
 import adminExpense from '../assets/adminExpense.png'
 import products from '../assets/products.png'
-import { Link, Outlet, useLocation } from 'react-router-dom'
+import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
 import { IoIosNotificationsOutline } from "react-icons/io";
 import { IoSearchOutline } from "react-icons/io5";
 import view_list from '../assets/view_list.png'
@@ -15,41 +15,49 @@ import { useSelector } from 'react-redux'
 const AdminLayout = () => {
   const location = useLocation()
   const admin = useSelector(state => state.admin)
-  console.log(admin)
+  const permissions = admin?.permissions || []
 
   // menu items
   const menuItems = [
     {
       name: 'Dashboard',
       icon: dashboardIcon,
-      path: '/admin/dashboard'
+      path: '/admin/dashboard',
+      permission: "dashboard"
     },
     {
       name: "Admin Management",
       icon: manage,
-      path: '/admin/admin-management'
+      path: '/admin/admin-management',
     },
     {
       name: "Expense",
       icon: adminExpense,
-      path: '/admin/expense'
+      path: '/admin/expense',
+      permission: "expense"
     },
     {
       name: "Products",
       icon: products,
       path: '/admin/products',
-      subMenu: {
-        name: "Inventory",
-        path: '/admin/products/inventory',
-        icon: view_list
-      },
-      subMenu2: {
-        name: "Orders",
-        path: '/admin/products/orders',
-        icon: receipt
-      }
+      permission: "products",
     },
+    {
+      name: "Inventory",
+      path: '/admin/inventory',
+      icon: view_list,
+      permission: "inventory"
+    },
+    {
+      name: "Orders",
+      path: '/admin/orders',
+      icon: receipt,
+      permission: "orders"
+    }
   ]
+
+
+  const filteredMenuItems = menuItems.filter(item => permissions.includes(item.permission));
   return (
     <div className='flex overflow-hidden'>
       {/* sidebar */}
@@ -63,38 +71,32 @@ const AdminLayout = () => {
 
 
         {/* menus */}
-        <div className=' py-10 relative'>
-          <hr className='relative bottom-2' />
-          {
-            menuItems.map((item, index) => (
-              <div key={index}>
-                <Link className={`flex items-center gap-4 pb-3 px-6 border-b ${location.pathname === item.path || location.pathname === item.subMenu?.path || location.pathname === item.subMenu2?.path ? 'text-[#213732] font-semibold' : ''}`} to={item.path}>
-                  <img className='w-[17px]' src={item.icon} alt="" />
-                  <p className='text-[20px]'>{item.name}</p>
-                </Link>
+        <div className="py-10 relative">
+          <hr className="relative bottom-2" />
 
+          {filteredMenuItems.map((item, index) => (
+            <NavLink
+              key={index}
+              to={item.path}
+              className={({ isActive }) =>
+                `group flex items-center gap-4 py-3 px-6 border-b relative transition
+         ${isActive ? "text-[#213732] font-semibold" : "text-gray-600 hover:text-[#213732]"}`
+              }
+            >
+              {/* Active Line */}
+              <span
+                className={({ isActive }) =>
+                  `absolute right-0 top-1/2 -translate-y-1/2 w-[3px] h-[36px] bg-[#213732] transition 
+           ${isActive ? "opacity-100" : "opacity-0"}`
+                }
+              />
 
-                <Link className={` ml-16  flex items-center  gap-2 py-2 ${location.pathname === item.subMenu?.path ? 'text-[#213732] font-semibold' : ''}`} to={item.subMenu?.path}>
-                  <img className='w-[14px] ' src={item.subMenu?.icon} alt="" />
-                  <p className='text-[14px] '>{item.subMenu?.name}</p>
-                </Link>
-                <Link className={`ml-16 flex items-center gap-2   ${location.pathname === item.subMenu2?.path ? 'text-[#213732] font-semibold' : ''}`} to={item.subMenu2?.path}>
-                  <img className='w-[14px]' src={item.subMenu2?.icon} alt="" />
-                  <p className='text-[14px  ]'>{item.subMenu2?.name}</p>
-                </Link>
-
-
-                {/* line for active link */}
-                {location.pathname === "/admin/dashboard" && <div className='absolute top-10 right-0 w-[3px] h-[36px] bg-[#213732]'></div>}
-                {location.pathname === "/admin/admin-management" && <div className='absolute top-24 right-0 w-[3px] h-[36px] bg-[#213732]'></div>}
-                {location.pathname === "/admin/expense" && <div className='absolute top-[155px] right-0 w-[3px] h-[36px] bg-[#213732]'></div>}
-                {location.pathname === "/admin/products" && <div className='absolute top-[214px] right-0 w-[3px] h-[36px] bg-[#213732]'></div>}
-                {location.pathname === "/admin/products/inventory" && <div className='absolute top-[265px] right-0 w-[2px] h-[26px] bg-[#213732]'></div>}
-                {location.pathname === "/admin/products/orders" && <div className='absolute top-[295px] right-0 w-[2px] h-[26px] bg-[#213732]'></div>}
-              </div>
-            ))
-          }
+              <img className="w-[17px]" src={item.icon} alt="" />
+              <p className="text-[18px]">{item.name}</p>
+            </NavLink>
+          ))}
         </div>
+
 
 
 

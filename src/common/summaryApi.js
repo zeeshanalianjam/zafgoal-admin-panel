@@ -67,7 +67,22 @@ const summaryApi = {
     getAllProducts: {
         url: `${productUrl}/get-all-products`,
         method: `get`
-    }
+    },
+
+
+    // Admins Api's
+    getAllAdmins: {
+        url: `${userUrl}/get-all-admins`,
+        method: `get`
+    },
+    updateAdminDetails: (adminId) => ({
+        url: `${userUrl}/update-admin-details/${adminId}`,
+        method: `put`
+    }),
+    deleteAdmin: (adminId) => ({
+        url: `${userUrl}/delete-admin/${adminId}`,
+        method: `delete`
+    }),
 
 
 }

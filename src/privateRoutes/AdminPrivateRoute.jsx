@@ -44,6 +44,8 @@ const AdminPrivateRoute = ({ children }) => {
       }
     };
 
+
+
     validateTokenAndFetchUser();
   }, [token, dispatch, navigate]);
 

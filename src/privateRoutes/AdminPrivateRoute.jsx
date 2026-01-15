@@ -25,6 +25,9 @@ const AdminPrivateRoute = ({ children }) => {
         const currentTime = Date.now() / 1000;
         const response = await Axios({
           ...summaryApi.getUserDetails,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         });
 
         if (decodedToken.exp < currentTime) {

@@ -24,7 +24,7 @@ export default function App() {
         <Route path="/" element={<AdminLogin />} />
 
         {/* super admin login */}
-        <Route path="/super-admin/login" element={<SuperAdminLogin />} />
+        {/* <Route path="/super-admin/login" element={<SuperAdminLogin />} /> */}
 
         {/* admin dashboard layout */}
         <Route path="/admin" element={<AdminPrivateRoute> <AdminLayout /> </AdminPrivateRoute>} >

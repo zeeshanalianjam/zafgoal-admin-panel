@@ -1,5 +1,9 @@
 import toast from "react-hot-toast";
 
+const adminToken = localStorage.getItem("adminToken");
+const superAdminToken = localStorage.getItem("superAdminToken");
+
+
 export const handleApiError = (error) => {
   let ErrorMsg = error.response?.data?.message || error?.message;
 
@@ -24,8 +28,16 @@ export const handleApiError = (error) => {
       toast.error(ErrorMsg);
     } else if (status === 401) {
       toast.error(ErrorMsg);
-      localStorage.removeItem("adminToken");
-      window.location.href = "/";
+      if (adminToken) {
+        localStorage.removeItem("adminToken")
+        window.location.href = "/";
+      } else if (superAdminToken) {
+        localStorage.removeItem("superAdminToken")
+        window.location.href = "/super-admin/login";
+      }
+      return;
+    } else if (status === 409) {
+      toast.error(ErrorMsg)
     } else if (status === 400) {
       toast.error(ErrorMsg);
     } else {

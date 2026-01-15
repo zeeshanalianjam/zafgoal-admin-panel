@@ -45,19 +45,32 @@ const AdminLogin = () => {
       })
 
       if (response.data.success) {
-        if (response?.data?.data?.user?.role !== 'Admin') {
-          return toast.error('You are not an Admin!');
+
+        const role = response?.data?.data?.user?.role;
+
+        if (!['Admin', 'SuperAdmin'].includes(role)) {
+          return toast.error("You're not an Admin");
         }
+
         const token = response.data.data.token
-        localStorage.setItem('adminToken', token)
         dispatch(setAdmin(response.data.data.user))
-        const permission = response.data.data.user.permissions
+        if (response?.data?.data?.user?.role === 'Admin') {
+          localStorage.setItem('adminToken', token)
+          const permission = response.data.data.user.permissions
+          navigate(`/admin/${permission[0]}`)
+
+
+        }
+
+        if (response?.data?.data?.user?.role === 'SuperAdmin') {
+          localStorage.setItem('superAdminToken', token)
+          navigate('/super-admin/dashboard')
+        }
 
         setData({
           email: "",
           password: ""
         })
-        navigate(`/admin/${permission[0]}`)
 
       }
     } catch (error) {
@@ -83,11 +96,11 @@ const AdminLogin = () => {
         {/* form */}
         <form onSubmit={handleSubmit} className='border-2 rounded-[40px] text-white bg-[#2137320D] backdrop-blur-md py-10 w-[690px]'>
           <div className='w-[500px] mx-auto space-y-6'>
-            <h3 className='text-[28px] font-[400]'>Login as a Admin</h3>
+            <h3 className='text-[28px] font-[400]'>Login to Dashboard</h3>
 
             {/* inputs fields */}
             <div className='flex flex-col'>
-              <label className='text-[18px]' htmlFor="email">Enter Your Admin Email ID</label>
+              <label className='text-[18px]' htmlFor="email">Enter Your Email ID</label>
               <input className='rounded-[14px] outline-none h-[50px] text-black px-4' type="text" placeholder='admin@gmail.com'
                 name='email' value={data.email} onChange={handleChange} />
             </div>
@@ -119,10 +132,10 @@ const AdminLogin = () => {
               </button>
             </div>
 
-            <p className='text-center'>or continue with</p>
+            {/* <p className='text-center'>or continue with</p> */}
 
             {/* continue with buttons */}
-            <div className=''>
+            {/* <div className=''>
               <div className='flex items-center justify-center gap-[20px]'>
                 <button className='w-[150px] h-[50px] bg-white flex items-center justify-center rounded-[10px]'>
                   <img className='w-[24px]' src={googleIcon} alt="" />
@@ -133,7 +146,7 @@ const AdminLogin = () => {
               </div>
             </div>
 
-            <p className='text-center font-semibold '><Link to={"/super-admin/login"}>Login as a Super Admin</Link></p>
+            <p className='text-center font-semibold '><Link to={"/super-admin/login"}>Login as a Super Admin</Link></p> */}
 
 
           </div>

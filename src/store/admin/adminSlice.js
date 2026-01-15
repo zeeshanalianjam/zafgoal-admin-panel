@@ -19,9 +19,16 @@ const adminSlice = createSlice({
             state.email = action.payload.email
             state.role = action.payload.role
             state.permissions = action.payload.permissions
+        },
+        logout: (state, action) => {
+            state._id = ""
+            state.name = ""
+            state.email = ""
+            state.role = ""
+            state.permissions = []
         }
     }
 })
 
-export const { setAdmin } = adminSlice.actions;
+export const { setAdmin, logout } = adminSlice.actions;
 export default adminSlice.reducer

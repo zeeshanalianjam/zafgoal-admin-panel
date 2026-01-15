@@ -58,7 +58,7 @@ const StocksDetails = () => {
             {/* filters */}
             <div className='flex items-center justify-between'>
                 {/* left */}
-                {location.pathname === "/admin/products/orders" ? "" : <div className="flex bg-gray-200 p-1 rounded-xl">
+                {location.pathname === "/admin/orders" ? "" : <div className="flex bg-gray-200 p-1 rounded-xl">
                     <button
                         onClick={() => setView('items')}
                         className={`flex items-center gap-2 px-4 py-2 rounded-lg transition ${view === 'items' ? 'bg-white shadow-md' : 'text-gray-600'}`}
@@ -74,7 +74,7 @@ const StocksDetails = () => {
                 </div>}
 
                 {/* right */}
-                {location.pathname === "/admin/products/orders" ? "" : <select
+                {location.pathname === "/admin/orders" ? "" : <select
                     onChange={(e) => setFilterStatus(e.target.value)}
                     className="border p-2 rounded-xl bg-white shadow-sm outline-none"
                 >
@@ -88,7 +88,7 @@ const StocksDetails = () => {
 
             {/* stocks data */}
             <div>
-                {location.pathname == "/admin/products/orders" ? <OrderData /> : <StockData view={view} filteredItems={filteredItems} data={mockData} />}
+                {location.pathname == "/admin/orders" || location.pathname == "/super-admin/orders"  ? <OrderData /> : <StockData view={view} filteredItems={filteredItems} data={mockData} />}
             </div>
 
 

@@ -44,7 +44,7 @@ const ResetPassword = ({ open, setOpen, data }) => {
             <AnimatePresence>
                 {open && (
                     <motion.div
-                        className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+                        className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
@@ -59,7 +59,7 @@ const ResetPassword = ({ open, setOpen, data }) => {
                         >
                             {/* Close Button */}
                             <button
-                                onClick={() => setEmailOpen(false)}
+                                onClick={() => setOpen(false)}
                                 className="absolute right-4 top-4 rounded-full p-2 hover:bg-gray-100"
                             >
                                 <IoCloseSharp size={20} />

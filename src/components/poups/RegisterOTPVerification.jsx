@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { IoCloseSharp } from "react-icons/io5";
 import { handleApiError } from "../../utils/handleApiError";
@@ -6,15 +6,29 @@ import { Axios } from "../../common/Axios";
 import { summaryApi } from "../../common/summaryApi";
 import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
-import ResetPassword from "./ResetPassword";
 
-const OTPVerification = ({ otpVerify, setOtpVerify }) => {
+const RegisterOTPVerification = ({ otpVerify, setOtpVerify }) => {
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [loading, setLoading] = useState(false);
-  const admin = useSelector((state) => state.admin);
-  const [openResetPassword, setOpenResetPassword] = useState(false);
 
-  /* ---------------- OTP CHANGE ---------------- */
+  const [resendTimer, setResendTimer] = useState(60);
+  const [resendLoading, setResendLoading] = useState(false);
+
+  const admin = useSelector((state) => state.admin);
+
+  /* ================= TIMER ================= */
+  useEffect(() => {
+    if (!otpVerify) return;
+    if (resendTimer === 0) return;
+
+    const interval = setInterval(() => {
+      setResendTimer((prev) => prev - 1);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [resendTimer, otpVerify]);
+
+  /* ================= OTP CHANGE ================= */
   const handleOtpChange = (e, index) => {
     const value = e.target.value;
     if (!/^\d?$/.test(value)) return;
@@ -28,14 +42,14 @@ const OTPVerification = ({ otpVerify, setOtpVerify }) => {
     }
   };
 
-  /* ---------------- BACKSPACE ---------------- */
+  /* ================= BACKSPACE ================= */
   const handleOtpKeyDown = (e, index) => {
     if (e.key === "Backspace" && !otp[index] && index > 0) {
       document.getElementById(`otp-${index - 1}`)?.focus();
     }
   };
 
-  /* ---------------- PASTE OTP ---------------- */
+  /* ================= PASTE OTP ================= */
   const handleOtpPaste = (e) => {
     e.preventDefault();
     const pastedData = e.clipboardData.getData("text").trim();
@@ -45,13 +59,11 @@ const OTPVerification = ({ otpVerify, setOtpVerify }) => {
       return;
     }
 
-    const pastedOtp = pastedData.split("");
-    setOtp(pastedOtp);
-
+    setOtp(pastedData.split(""));
     document.getElementById("otp-5")?.focus();
   };
 
-  /* ---------------- SUBMIT ---------------- */
+  /* ================= VERIFY OTP ================= */
   const handleSubmit = async () => {
     const finalOtp = otp.join("");
     if (finalOtp.length !== 6) return toast.error("Please enter full OTP");
@@ -59,22 +71,48 @@ const OTPVerification = ({ otpVerify, setOtpVerify }) => {
     try {
       setLoading(true);
       const response = await Axios({
-        ...summaryApi.forgotPasswordOTPVerification,
+        ...summaryApi.registerOTPVerify,
         data: {
-          email: admin?.email,
           otp: finalOtp,
         },
       });
 
       if (response.data.success) {
+        toast.success(response.data.message);
         setOtpVerify(false);
-        setOpenResetPassword(true);
         setOtp(["", "", "", "", "", ""]);
       }
     } catch (error) {
       handleApiError(error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  /* ================= RESEND OTP ================= */
+  const handleResendOtp = async () => {
+    if (resendTimer > 0) return;
+
+    try {
+      setResendLoading(true);
+
+      const response = await Axios({
+        ...summaryApi.resendRegisterOTP,
+        data: {
+          email: admin?.email,
+        },
+      });
+
+      if (response.data.success) {
+        toast.success("OTP resent successfully");
+        setOtp(["", "", "", "", "", ""]);
+        setResendTimer(60);
+        document.getElementById("otp-0")?.focus();
+      }
+    } catch (error) {
+      handleApiError(error);
+    } finally {
+      setResendLoading(false);
     }
   };
 
@@ -111,9 +149,10 @@ const OTPVerification = ({ otpVerify, setOtpVerify }) => {
                 Enter the 6-digit code sent to your email
               </p>
 
-              {/* OTP */}
+              {/* OTP INPUTS */}
               <motion.div
                 className="mt-6 flex justify-between gap-2"
+                onPaste={handleOtpPaste}
                 initial="hidden"
                 animate="visible"
                 variants={{
@@ -122,7 +161,6 @@ const OTPVerification = ({ otpVerify, setOtpVerify }) => {
                     transition: { staggerChildren: 0.07 },
                   },
                 }}
-                onPaste={handleOtpPaste}
               >
                 {otp.map((digit, index) => (
                   <motion.input
@@ -143,7 +181,28 @@ const OTPVerification = ({ otpVerify, setOtpVerify }) => {
                 ))}
               </motion.div>
 
-              {/* Button */}
+              {/* RESEND */}
+              <div className="mt-4 flex justify-center">
+                <motion.button
+                  onClick={handleResendOtp}
+                  disabled={resendTimer > 0 || resendLoading}
+                  whileHover={resendTimer === 0 ? { scale: 1.05 } : {}}
+                  whileTap={resendTimer === 0 ? { scale: 0.95 } : {}}
+                  className={`text-sm font-medium ${
+                    resendTimer > 0
+                      ? "cursor-not-allowed text-gray-400"
+                      : "text-[#213732] hover:underline"
+                  }`}
+                >
+                  {resendLoading
+                    ? "Resending..."
+                    : resendTimer > 0
+                      ? `Resend OTP in ${resendTimer}s`
+                      : "Resend OTP"}
+                </motion.button>
+              </div>
+
+              {/* VERIFY BUTTON */}
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.97 }}
@@ -168,15 +227,8 @@ const OTPVerification = ({ otpVerify, setOtpVerify }) => {
           </motion.div>
         )}
       </AnimatePresence>
-
-      {/* Reset Password */}
-      <ResetPassword
-        open={openResetPassword}
-        setOpen={setOpenResetPassword}
-        data={admin?.email}
-      />
     </>
   );
 };
 
-export default OTPVerification;
+export default RegisterOTPVerification;

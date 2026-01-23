@@ -14,7 +14,7 @@ const SuperAdminPrivateRoute = ({ children }) => {
   const token = localStorage.getItem("superAdminToken");
 
   if (!token) {
-    return <Navigate to="/super-admin/login" />;
+    return <Navigate to="/" />;
   }
 
   useEffect(() => {
@@ -29,7 +29,7 @@ const SuperAdminPrivateRoute = ({ children }) => {
 
         if (decodedToken.exp < currentTime) {
           // Token expired
-          localStorage.removeItem("adminToken");
+          localStorage.removeItem("superAdminToken");
           navigate("/");
           return;
         }
@@ -38,7 +38,7 @@ const SuperAdminPrivateRoute = ({ children }) => {
           dispatch(setAdmin(response.data.data));
         }
       } catch (error) {
-        localStorage.removeItem("adminToken");
+        localStorage.removeItem("superAdminToken");
         handleApiError(error);
         navigate("/");
       }

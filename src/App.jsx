@@ -13,9 +13,12 @@ import Orders from "./pages/Orders";
 import { Toaster } from "react-hot-toast";
 import AdminPrivateRoute from "./privateRoutes/AdminPrivateRoute";
 import NotFound from "./pages/NotFound";
+import UserManagement from "./components/UserManagement";
 
 
 export default function App() {
+
+  
 
   return (
     <>
@@ -29,7 +32,6 @@ export default function App() {
         {/* admin dashboard layout */}
         <Route path="/admin" element={<AdminPrivateRoute> <AdminLayout /> </AdminPrivateRoute>} >
           <Route path="dashboard" element={< SuperAdminDashboard />} />
-          <Route path="admin-management" element={<AdminManage />} />
           <Route path="expense" element={<Expense />} />
           <Route path="products" element={<Products />} />
           <Route path="inventory" element={<Inventory />} />
@@ -40,6 +42,7 @@ export default function App() {
         <Route path="/super-admin" element={<SuperAdminPrivateRoute> <SuperAdminLayout /> </SuperAdminPrivateRoute>} >
           <Route path="dashboard" element={<SuperAdminDashboard />} />
           <Route path="admin-management" element={<AdminManage />} />
+          <Route path="user-management" element={<UserManagement />} />
           <Route path="expense" element={<Expense />} />
           <Route path="products" element={<Products />} />
           <Route path="inventory" element={<Inventory />} />

@@ -35,11 +35,6 @@ const AdminLayout = () => {
       permission: "dashboard"
     },
     {
-      name: "Admin Management",
-      icon: manage,
-      path: '/admin/admin-management',
-    },
-    {
       name: "Expense",
       icon: adminExpense,
       path: '/admin/expense',
@@ -69,23 +64,23 @@ const AdminLayout = () => {
   const filteredMenuItems = menuItems.filter(item => permissions.includes(item.permission));
 
   const handleLogout = async () => {
-    try {
-      setLoading(true)
+      try {
+        setLoading(true)
 
-      const response = await Axios({
-        ...summaryApi.logout
-      })
+        const response = await Axios({
+          ...summaryApi.logout
+        })
 
-      if (response.data.success) {
-        localStorage.removeItem("adminToken")
-        dispatch(logout())
-        navigate('/')
+        if (response.data.success) {
+          localStorage.removeItem("adminToken")
+          dispatch(logout())
+          navigate('/')
+        }
+      } catch (error) {
+        handleApiError(error)
+      } finally {
+        setLoading(false)
       }
-    } catch (error) {
-      handleApiError(error)
-    } finally {
-      setLoading(false)
-    }
 
   }
   return (

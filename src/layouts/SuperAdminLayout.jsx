@@ -40,6 +40,11 @@ const SuperAdminLayout = () => {
       path: '/super-admin/admin-management',
     },
     {
+      name: "User Management",
+      icon: manage,
+      path: '/super-admin/user-management',
+    },
+    {
       name: "Expense",
       icon: adminExpense,
       path: '/super-admin/expense',

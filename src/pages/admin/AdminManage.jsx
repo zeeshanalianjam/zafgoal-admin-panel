@@ -1,65 +1,56 @@
 import React, { useEffect, useState } from "react";
-import AdminManageCard from "../../components/AdminManageCard";
-import { FaWallet, FaFileAlt, FaGlobe, FaShoppingCart } from "react-icons/fa";
-import ProfileInfoCard from "../../components/ProfileInfoCard";
-import FeatureSettingsCard from "../../components/FeatureSettingsCard";
-import StockAvailability from "../../components/StockAvailability";
-import StocksDetails from "../../components/StocksDetails";
-import AddAdmin from "../../components/poups/AddAdmin";
+import { motion } from "framer-motion";
 import AdminsTable from "../../components/AdminsTable";
-import { Axios } from '../../common/Axios'
-import { summaryApi } from '../../common/summaryApi'
-import { handleApiError } from '../../utils/handleApiError'
+import AddAdmin from "../../components/poups/AddAdmin";
 import EditAdmin from "../../components/poups/EditAdmin";
-import toast from "react-hot-toast";
 import DeleteConfirmModal from "../../components/poups/DeleteConfirmModal";
+import RegisterOTPVerification from "../../components/poups/RegisterOTPVerification";
+import { Axios } from "../../common/Axios";
+import { summaryApi } from "../../common/summaryApi";
+import { handleApiError } from "../../utils/handleApiError";
+import toast from "react-hot-toast";
+
+const container = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.08 },
+  },
+};
+
+const item = {
+  hidden: { opacity: 0, y: 15 },
+  visible: { opacity: 1, y: 0 },
+};
 
 const AdminManage = () => {
-  // stocks state
-  const [stockOpen, setStockOpen] = React.useState(true);
-  const [addAdmin, setAddAdmin] = useState(false);
+  const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  // Edit admin states
-  const [editAdminOpen, setEditAdminOpen] = useState(false)
-  const [editAdminData, setEditAdminData] = useState({
-    _id: '',
-    name: '',
-    email: '',
-    password: '',
-    permissions: []
-  })
-  const [originalPermissions, setOriginalPermissions] = useState([])
+  const [addAdmin, setAddAdmin] = useState(false);
+  const [editAdminOpen, setEditAdminOpen] = useState(false);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [otpVerify, setOtpVerify] = useState(false);
 
+  const [selectedAdminId, setSelectedAdminId] = useState(null);
 
-
-
-  // ----------------------------
-  // admin table data for adminTable component
-  const [data, setData] = useState([])
-
+  /* ================= FETCH ADMINS ================= */
   const getAllAdmins = async () => {
     try {
-      const response = await Axios({
-        ...summaryApi.getAllAdmins,
-      })
-
+      const response = await Axios({ ...summaryApi.getAllAdmins });
       if (response.data.success) {
-        setData(response.data.data)
+        setData(response.data.data);
       }
     } catch (error) {
-      handleApiError(error)
+      handleApiError(error);
     }
-  }
+  };
 
   useEffect(() => {
-    getAllAdmins()
-  }, [])
-  // ----------------------------
+    getAllAdmins();
+  }, []);
 
-
-  // ----------------------------
-  // add admin data for addAdmin component
+  /* ================= ADD ADMIN ================= */
   const [addAdminData, setAddAdminData] = useState({
     name: "",
     email: "",
@@ -70,30 +61,20 @@ const AdminManage = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setAddAdminData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setAddAdminData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // handle permission select (ADD to array)
   const handlePermissionAdd = (e) => {
     const value = e.target.value;
-
     if (!value) return;
 
-    setAddAdminData((prev) => {
-      // prevent duplicates
-      if (prev.permissions.includes(value)) return prev;
-
-      return {
-        ...prev,
-        permissions: [...prev.permissions, value],
-      };
-    });
+    setAddAdminData((prev) =>
+      prev.permissions.includes(value)
+        ? prev
+        : { ...prev, permissions: [...prev.permissions, value] },
+    );
   };
 
-  // remove permission
   const handlePermissionRemove = (perm) => {
     setAddAdminData((prev) => ({
       ...prev,
@@ -112,11 +93,13 @@ const AdminManage = () => {
     try {
       setLoading(true);
       const response = await Axios({
-        ...summaryApi.register,
+        ...summaryApi.pendingRegister,
         data: addAdminData,
       });
 
       if (response.data.success) {
+        toast.success("Admin invitation sent");
+        setAddAdmin(false);
         setAddAdminData({
           name: "",
           email: "",
@@ -125,7 +108,6 @@ const AdminManage = () => {
           permissions: [],
         });
         getAllAdmins();
-        setAddAdmin(false);
       }
     } catch (error) {
       handleApiError(error);
@@ -133,189 +115,179 @@ const AdminManage = () => {
       setLoading(false);
     }
   };
-  // ----------------------------
 
+  /* ================= EDIT ADMIN ================= */
+  const [editAdminData, setEditAdminData] = useState({
+    _id: "",
+    name: "",
+    email: "",
+    password: "",
+    permissions: [],
+  });
 
-  // ----------------------------
-  // admin edit logic
+  const [originalPermissions, setOriginalPermissions] = useState([]);
+
   const handleEdit = (admin) => {
-    console.log('Edit admin:', admin)
     setEditAdminData({
       _id: admin._id,
       name: admin.name,
       email: admin.email,
-      password: '',
-      permissions: admin.permissions || []
-    })
-
-    setOriginalPermissions(admin.permissions || [])
-    setEditAdminOpen(true)
-  }
+      password: "",
+      permissions: admin.permissions || [],
+    });
+    setOriginalPermissions(admin.permissions || []);
+    setEditAdminOpen(true);
+  };
 
   const handleEditChange = (e) => {
-    const { name, value } = e.target
-    setEditAdminData(prev => ({
-      ...prev,
-      [name]: value
-    }))
-  }
+    const { name, value } = e.target;
+    setEditAdminData((prev) => ({ ...prev, [name]: value }));
+  };
 
   const handleEditPermissionAdd = (e) => {
-    const value = e.target.value
-
-    setEditAdminData(prev => {
-      if (prev.permissions.includes(value)) return prev
-
-      return {
-        ...prev,
-        permissions: [...prev.permissions, value]
-      }
-    })
-  }
+    const value = e.target.value;
+    setEditAdminData((prev) =>
+      prev.permissions.includes(value)
+        ? prev
+        : { ...prev, permissions: [...prev.permissions, value] },
+    );
+  };
 
   const handleEditPermissionRemove = (perm) => {
-    setEditAdminData(prev => ({
+    setEditAdminData((prev) => ({
       ...prev,
-      permissions: prev.permissions.filter(p => p !== perm)
-    }))
-  }
+      permissions: prev.permissions.filter((p) => p !== perm),
+    }));
+  };
 
   const handleEditSubmit = async (e) => {
-    e.preventDefault()
-    setLoading(true)
+    e.preventDefault();
+    setLoading(true);
 
     try {
-      // ---------------- DIFF LOGIC ----------------
       const addPermissions = editAdminData.permissions.filter(
-        perm => !originalPermissions.includes(perm)
-      )
-
+        (p) => !originalPermissions.includes(p),
+      );
       const removePermissions = originalPermissions.filter(
-        perm => !editAdminData.permissions.includes(perm)
-      )
+        (p) => !editAdminData.permissions.includes(p),
+      );
 
       const payload = {
         name: editAdminData.name,
         email: editAdminData.email,
         password: editAdminData.password,
         addPermissions,
-        removePermissions
-      }
+        removePermissions,
+      };
 
       const response = await Axios({
         ...summaryApi.updateAdminDetails(editAdminData._id),
-        data: payload
-      })
+        data: payload,
+      });
 
       if (response.data.success) {
-        toast.success('Admin updated successfully')
-        setEditAdminOpen(false)
-        getAllAdmins() // 🔥 TABLE REFRESH
+        toast.success("Admin updated successfully");
+        setEditAdminOpen(false);
+        getAllAdmins();
       }
     } catch (error) {
-      handleApiError(error)
+      handleApiError(error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
-  // ----------------------------
+  };
 
-
-
-  // ----------------------------
-  // admin delete logic
-  const [deleteModalOpen, setDeleteModalOpen] = useState(false)
-  const [selectedAdminId, setSelectedAdminId] = useState(null)
-  
-
-
-  const handleDeleteClick = (adminId) => {
-    setSelectedAdminId(adminId)
-    setDeleteModalOpen(true)
-  }
+  /* ================= DELETE ADMIN ================= */
+  const handleDeleteClick = (id) => {
+    setSelectedAdminId(id);
+    setDeleteModalOpen(true);
+  };
 
   const handleConfirmDelete = async () => {
-    if (!selectedAdminId) return
+    if (!selectedAdminId) return;
 
-    setLoading(true)
     try {
+      setLoading(true);
       const response = await Axios({
         ...summaryApi.deleteAdmin(selectedAdminId),
-      })
+      });
 
       if (response.data.success) {
-        toast.success(response.data.message)
-        setDeleteModalOpen(false)
-        setSelectedAdminId(null)
-        getAllAdmins() // 🔥 refresh table
+        toast.success(response.data.message);
+        setDeleteModalOpen(false);
+        getAllAdmins();
       }
     } catch (error) {
-      handleApiError(error)
+      handleApiError(error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
-  // ----------------------------
-
-
-
-
+  };
 
   return (
-    <div className="pt-16 space-y-10">
-      {/* header */}
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold">Admin Management</h1>
-        <button
-          onClick={() => setAddAdmin(true)}
-          className="px-4 py-2 text-white bg-[#213732] rounded-md"
-        >
-          Add Admin
-        </button>
-      </div>
-
-
-      {/* cards */}
-      {/* <div className=' flex justify-between  items-center gap-[10px]'>
-        <AdminManageCard name="Inventory Admin" Icon={FaWallet} isActive="true" />
-        <AdminManageCard name="Content & Merchandising Admin" Icon={FaFileAlt} />
-        <AdminManageCard name="Sales Admin" Icon={FaGlobe} />
-        <AdminManageCard name="customer management" Icon={FaShoppingCart} />
-
-      </div> */}
-
-      {/* profile info & feature control */}
-      {/* <div className="flex items-center justify-between gap-2">
-        <ProfileInfoCard />
-        <FeatureSettingsCard label="" />
-      </div> */}
-
-      <div className="space-y-4">
-        {/* stocks availability & out of stock */}
-        <div className="flex items-center justify-between gap-2">
-          {/* <StockAvailability stockOpen={stockOpen} setStockOpen={setStockOpen} />
-          <StockAvailability /> */}
+    <motion.div
+      className="pt-16 space-y-10"
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4 }}
+    >
+      {/* ================= HEADER ================= */}
+      <motion.div
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="flex items-center justify-between"
+      >
+        <div>
+          <h1 className="text-2xl font-semibold">Admin Management</h1>
+          <p className="text-sm text-gray-500">
+            Manage admins, roles & permissions
+          </p>
         </div>
 
-        {/* stocks details */}
-        <div>{/* <StocksDetails /> */}</div>
-      </div>
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => setAddAdmin(true)}
+          className="px-5 py-2 rounded-xl bg-[#213732] text-white font-medium"
+        >
+          + Add Admin
+        </motion.button>
+      </motion.div>
 
+      {/* ================= TABLE ================= */}
+      <motion.div
+        variants={container}
+        initial="hidden"
+        animate="visible"
+        className="rounded-2xl bg-white shadow-sm p-4"
+      >
+        <motion.div variants={item}>
+          <AdminsTable
+            data={data}
+            handleEdit={handleEdit}
+            handleDelete={handleDeleteClick}
+          />
+        </motion.div>
+      </motion.div>
 
-      {/* -------------------------------------- */}
-      {/* new admin updated data */}
+      {/* ================= MODALS ================= */}
+      {addAdmin && (
+        <AddAdmin
+          setAddAdmin={setAddAdmin}
+          handleSubmit={handleSubmit}
+          handleChange={handleChange}
+          addAdminData={addAdminData}
+          handlePermissionAdd={handlePermissionAdd}
+          handlePermissionRemove={handlePermissionRemove}
+          loading={loading}
+        />
+      )}
 
-      {/* admins table */}
-      <div>
-        <AdminsTable data={data} handleEdit={handleEdit} handleDelete={handleDeleteClick} />
-      </div>
+      <RegisterOTPVerification
+        otpVerify={otpVerify}
+        setOtpVerify={setOtpVerify}
+      />
 
-
-      {/* add admin  */}
-      {addAdmin && <AddAdmin setAddAdmin={setAddAdmin} handleSubmit={handleSubmit} handleChange={handleChange} addAdminData={addAdminData} handlePermissionAdd={handlePermissionAdd} handlePermissionRemove={handlePermissionRemove} loading={loading} />}
-
-
-      {/* update admin details */}
       {editAdminOpen && (
         <EditAdmin
           setEditAdminOpen={setEditAdminOpen}
@@ -328,15 +300,13 @@ const AdminManage = () => {
         />
       )}
 
-
       <DeleteConfirmModal
         open={deleteModalOpen}
         onClose={() => setDeleteModalOpen(false)}
         onConfirm={handleConfirmDelete}
         loading={loading}
       />
-
-    </div>
+    </motion.div>
   );
 };
 

@@ -33,7 +33,7 @@ export const handleApiError = (error) => {
         window.location.href = "/";
       } else if (superAdminToken) {
         localStorage.removeItem("superAdminToken")
-        window.location.href = "/super-admin/login";
+        window.location.href = "/";
       }
       return;
     } else if (status === 409) {

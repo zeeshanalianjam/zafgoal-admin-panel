@@ -4,7 +4,7 @@ import { MdEdit } from "react-icons/md";
 
 const ExpenseProfile = () => {
     return (
-        <div className='bg-[#F1F3F4] w-[855px]  rounded-[12px] px-6 py-5'>
+        <div className='bg-[#F1F3F4] w-full  rounded-[12px] px-6 py-5'>
             {/* heading */}
             <div className='flex items-center justify-between'>
                 <h3>Oliver Liam</h3>

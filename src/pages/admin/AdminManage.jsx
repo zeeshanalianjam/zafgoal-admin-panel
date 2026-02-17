@@ -52,6 +52,7 @@ const AdminManage = () => {
 
   /* ================= ADD ADMIN ================= */
   const [addAdminData, setAddAdminData] = useState({
+    directCreate : true,
     name: "",
     email: "",
     password: "",
@@ -98,9 +99,10 @@ const AdminManage = () => {
       });
 
       if (response.data.success) {
-        toast.success("Admin invitation sent");
+        toast.success(response.data.message);
         setAddAdmin(false);
         setAddAdminData({
+          directCreate : false,
           name: "",
           email: "",
           password: "",

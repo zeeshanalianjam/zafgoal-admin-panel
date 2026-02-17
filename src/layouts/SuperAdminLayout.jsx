@@ -100,7 +100,7 @@ const SuperAdminLayout = () => {
 
         {/* menus */}
         <div className="py-10 relative">
-          <hr className="relative bottom-2" />
+          <hr className="relative bottom-0" />
 
           {menuItems.map((item, index) => (
             <NavLink

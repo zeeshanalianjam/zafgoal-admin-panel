@@ -10,7 +10,7 @@ const ExpenseReport = ({ stockOpen, setStockOpen }) => {
     StockIcon: GoTag,
   }
   return (
-    <div className='bg-white flex justify-between items-center w-[491px] h-[80px] rounded-[15px] shadow-md px-4'>
+    <div className='bg-white flex justify-between items-center w-full h-[80px]  rounded-[15px] shadow-md px-4'>
       <div className={` font-semibold ${stockOpen ? "text-[#00C678]" : "text-[#FF3C26]"}`}>
         <p className=' text-[12px]'>{stockOpen ? stockAvailable.label : "Loss"}</p>
         <div className='flex items-center gap-8'>

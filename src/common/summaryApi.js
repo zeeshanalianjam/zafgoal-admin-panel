@@ -57,6 +57,10 @@ const summaryApi = {
     url: `${userUrl}/delete-user/${userId}`,
     method: `delete`,
   }),
+  updateUsersDetails: (userId) => ({
+    url: `${userUrl}/update-user-details/${userId}`,
+    method: `put`,
+  }),
 
   // Orders Api's
   getAllOrders: {
